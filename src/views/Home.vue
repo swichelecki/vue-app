@@ -8,7 +8,7 @@
 <script>
 import AddTodo from '../components/AddTodo';
 import Todos from '../components/Todos';
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase';
 //import 'firebase/database';
 import _ from 'lodash';
 export default {

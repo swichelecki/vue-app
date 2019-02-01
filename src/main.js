@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import Router from 'vue-router'
 import {routes} from './router'
-import * as firebase from 'firebase/app'
-import 'firebase/database'
+import * as firebase from 'firebase'
+//import 'firebase/database'
 
 // Initialize Firebase
 var config = {
