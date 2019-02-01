@@ -19,7 +19,7 @@ firebase.initializeApp(config);
 /*new Vue({
   render: h => h(App),
 }).$mount('#app')*/
-Vue.use(Router)
+//Vue.use(Router)
 
 
 let router = new Router({mode: 'history', routes});
