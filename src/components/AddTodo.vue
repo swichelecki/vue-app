@@ -1,7 +1,8 @@
 <template>
     <div>
         <form @submit="addTodo">
-            <input type="text" v-model="title" name="title" placeholder="Add Todo...">
+            <input type="text" v-model="title" name="title" placeholder="Add Todo..." onfocus="this.placeholder = ''"
+onblur="this.placeholder = 'Add Todo...'">
             <select id="select">
                 <option>Due Date</option>
                 <option value="today">Today</option>
@@ -47,11 +48,26 @@ export default {
     }
 
     input[type="text"] {
-        flex: 10;
-        padding: 5px
+        flex: 8;
+        padding: 10px;
+        font-size: 16px;
+        outline: none;
+        border: 1px solid #ccc;
     }
 
     input[type="submit"] {
-        flex: 2;
+        flex: 1;
+        font-size: 16px;
+        outline: none;
+    }
+
+    select {
+        flex: 1;
+        appearance: none;
+        padding: 10px;
+        font-size: 16px;
+        outline: none;
+        border: 1px solid #ccc;
+        border-radius: 0;
     }
 </style>

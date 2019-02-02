@@ -24,25 +24,14 @@ export default {
     padding: 0;
 }
 
-html {
-    height: 100%;
-}
-
 body {
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.4;
-    height: 100%;
-}
-
-.flex-wrapper {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-content: center;
 }
 
 .container {
-    max-width: 500px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .btn {
