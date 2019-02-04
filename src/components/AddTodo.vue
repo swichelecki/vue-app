@@ -9,7 +9,7 @@ onblur="this.placeholder = 'Add Todo...'">
                 <option value="week">This Week</option>
                 <option value="never">Never</option>
             </select>
-            <input type="submit" value="Submit" class="btn">
+            <button type="submit" class="btn">Submit</button>
         </form>
     </div>
 </template>
@@ -48,23 +48,32 @@ export default {
     }
 
     input[type="text"] {
-        flex: 8;
+        width: 67%;
         padding: 10px;
         font-size: 16px;
         outline: none;
         border: 1px solid #ccc;
+        border-radius: 0;
     }
 
-    input[type="submit"] {
+    .btn {
+        display: inline-block;
+        border: none;
+        background: #555;
+        color: #fff;
+        padding: 7px 20px;
+        cursor: pointer;
+        font-size: 16px;
         flex: 1;
         font-size: 16px;
         outline: none;
+        border-radius: 0;
     }
 
     select {
         flex: 1;
         appearance: none;
-        padding: 10px;
+        padding: 10px 10px 10px 15px;
         font-size: 16px;
         outline: none;
         border: 1px solid #ccc;

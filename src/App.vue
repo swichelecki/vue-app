@@ -34,12 +34,4 @@ body {
     margin: 0 auto;
 }
 
-.btn {
-    display: inline-block;
-    border: none;
-    background: #555;
-    color: #fff;
-    padding: 7px 20px;
-    cursor: pointer;
-}
 </style>
