@@ -15,7 +15,8 @@ onblur="this.placeholder = 'Add Todo...'">
 </template>
 
 <script>
-import uuid from 'uuid';
+import * as firebase from 'firebase';
+let KEY;
 export default {
     name: 'AddTodo',
     data(){
@@ -29,8 +30,15 @@ export default {
             const select = document.getElementById('select');
             const form = document.querySelector('form');
             const opt = select.options[select.selectedIndex];
+
+            const TodoItemsDatabaseRef = firebase.database().ref('items');
+            TodoItemsDatabaseRef.on("value", function(snapshot) {
+                let id = snapshot.numChildren();
+                KEY = id + 1;
+            });
+
             const newTodo = {
-                key: uuid.v4(),
+                key: KEY,
                 title: this.title,
                 due: opt.text,
                 completed: false

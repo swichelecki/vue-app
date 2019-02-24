@@ -16,16 +16,10 @@ var config = {
 };
 firebase.initializeApp(config);
 
-/*new Vue({
-  render: h => h(App),
-}).$mount('#app')*/
-//Vue.use(Router)
-
-
 let router = new Router({mode: 'history', routes});
 
 new Vue({
     el: '#app',
     router,
     render: h => h(App)
-})//.$mount('#app');
+})

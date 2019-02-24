@@ -1,7 +1,7 @@
 <template>
   <div>
       <AddTodo v-on:add-todo="addTodo"/>
-      <Todos v-bind:todos="todos" v-on:del-todo="deleteTodo" v-on:is-complete="markComplete"/>
+      <Todos v-bind:todos="todos" v-on:del-todo="deleteTodo" v-on:reordered-todos="reorderedTodos" v-on:is-complete="markComplete"/>
   </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
          // this.todos = [...this.todos, newTodo];
           const todoItemsDatabaseRef = firebase.database().ref('items');
           const addTodo = todoItemsDatabaseRef.push();
-          addTodo.update(newTodo);
+          addTodo.set(newTodo);
       },
       markComplete(value, sentKey) {
            let complete;
@@ -75,7 +75,15 @@ export default {
             thisState.push(item);
         });
 
-      }
+    },
+    reorderedTodos(reorderedTodos) {
+        const oldTodoItemsDatabaseRef = firebase.database().ref('items');
+        oldTodoItemsDatabaseRef.remove();
+        const newTodoItemsDatabaseRef = firebase.database().ref('items');
+        reorderedTodos.forEach((item) => {
+            newTodoItemsDatabaseRef.push(item);
+        });
+    }
   },
   created(){
       const todoItemsDatabaseRef = firebase.database().ref('items');
