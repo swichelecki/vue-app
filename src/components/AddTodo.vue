@@ -53,21 +53,29 @@ export default {
 <style scoped>
     form {
         display: flex;
+        background-color: #fff;
+        padding-bottom: 10px;
     }
 
     input[type="text"] {
         width: 67%;
+        margin: 0 10px;
         padding: 10px;
         font-size: 16px;
+        color: #353c43;
         outline: none;
-        border: 1px solid #ccc;
-        border-radius: 0;
+        border: 1px solid whitesmoke;
+        background-color: whitesmoke;
+        border-radius: 20px;
+        font-weight: 200;
     }
 
     .btn {
         display: inline-block;
         border: none;
-        background: #555;
+        background: #484848;
+        border: 1px #3b3b3b solid;
+        font-weight: 200;
         color: #fff;
         padding: 7px 20px;
         cursor: pointer;
@@ -76,15 +84,20 @@ export default {
         font-size: 16px;
         outline: none;
         border-radius: 0;
+        margin: 0 10px;
+        border-radius: 5px;
     }
 
     select {
         flex: 1;
-        appearance: none;
+        color: #353c43;
+        font-weight: 200;
         padding: 10px 10px 10px 15px;
         font-size: 16px;
         outline: none;
-        border: 1px solid #ccc;
-        border-radius: 0;
+        border: 1px solid whitesmoke;
+        background-color: whitesmoke;
+        border-radius: 20px;
+        cursor: pointer;
     }
 </style>

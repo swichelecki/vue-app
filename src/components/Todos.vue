@@ -2,10 +2,10 @@
     <div id="todo-wrapper">
         <div v-for="todo in todos" :key="todo.key" v-on:dragstart="dragStart" v-on:dragover="dragOver" v-on:dragend="dragEnd" draggable="true" class="todo-item" v-bind:class="{'is-complete': todo.completed}">
             <p>
-                <input type="checkbox" v-on:change="$emit('is-complete', todo.completed, todo.key)">
+                <!--<input type="checkbox" v-on:change="$emit('is-complete', todo.completed, todo.key)">-->
                 {{todo.title}} - {{todo.due}}
-                <button @click="$emit('del-todo', todo.key)" class="del"><strong>X</strong></button>
             </p>
+            <button @click="$emit('del-todo', todo.key)" class="del">delete <br>x</button>
         </div>
     </div>
 </template>
@@ -131,26 +131,47 @@ export default {
     }
 
     .todo-item {
-        background-color: #f4f4f4;
-        padding: 10px;
-        border-bottom: 1px #ccc dotted;
+        position: relative;
+        color: #353c43;
+        background-color: #fff;
+        /*padding: 10px 10px 0 10px;*/
+        padding: 10px 10px 10px 15px;
+        border-bottom: 1px rgba(0,0,0,.12) solid;
         font-size: 18px;
         cursor: ns-resize;
     }
 
-    .is-complete {
-        text-decoration: line-through;
+    .todo-item p {
+        margin-right: 50px;
     }
 
     .del {
-        background: #c9302c;
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: #e60000;
+        border: 1px #cc0000 solid;
         color: #fff;
         border: none;
-        padding: 5px 8px;
-        border-radius: 50%;
+        padding: 5px 5px 5px 8px;
+        border-radius: 5px;
         cursor: pointer;
-        float: right;
+        font-weight: 200;
         outline: none;
+    }
+
+    .del:hover {
+        background: #FF0000;
+        border: 1px #e60000 solid;
+        top: 3px;
+        right: 3px;
+    }
+
+    .del:active {
+        background: #b30000;
+        border: 1px #b30000 solid;
+        top: 3px;
+        right: 3px;
     }
 
 </style>
