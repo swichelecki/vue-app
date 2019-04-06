@@ -1,19 +1,19 @@
 <template>
   <div id="app" class="flex-wrapper">
       <div class="container">
-          <Header />
+          <!--<Header />-->
           <router-view/>
       </div>
   </div>
 </template>
 
 <script>
-import Header from './components/Header';
+//import Header from './components/Header';
 export default {
   name: 'app',
-  components: {
+  /*components: {
       Header
-  }
+  }*/
 }
 </script>
 
@@ -28,7 +28,7 @@ export default {
 body {
     font-family: 'Work Sans', sans-serif;
     line-height: 1.4;
-    background-color: whitesmoke;
+    background-color: #f4f4f4;
 }
 
 .container {

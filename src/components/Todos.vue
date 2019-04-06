@@ -1,6 +1,6 @@
 <template>
     <div id="todo-wrapper">
-        <div v-for="todo in todos" :key="todo.key" v-on:dragstart="dragStart" v-on:dragover="dragOver" v-on:dragend="dragEnd" draggable="true" class="todo-item" v-bind:class="{'is-complete': todo.completed}">
+        <div v-for="todo in todos" :key="todo.key" v-on:dragstart="dragStart" v-on:touchstart="touchStart" v-on:dragover="dragOver" v-on:touchmove="touchMove" v-on:dragend="dragEnd" v-on:touchend="touchEnd" draggable="true" class="todo-item" v-bind:class="{'is-complete': todo.completed}">
             <p>
                 <!--<input type="checkbox" v-on:change="$emit('is-complete', todo.completed, todo.key)">-->
                 {{todo.title}} - {{todo.due}}
@@ -14,6 +14,8 @@
 let DRAG_EL = '';
 let TODO_WRAPPER = '';
 let OLD_INDEX = 0;
+//let MOVE_OFFSET_X = 0;
+let MOVE_OFFEST_Y = 0;
 export default {
     name: "Todos",
     props: ["todos"],
@@ -106,12 +108,102 @@ export default {
 
             this.$emit('reordered-todos', reorderedTodos);
 
+        },
+        /*resetZ() {
+            let todos = document.querySelectorAll('.todo-item');
+            for (var i = todos.length - 1; i >=0; i--){
+                todos[i].style.zIndex = 5;
+            }
+        },*/
+        touchHandler(event){
+
+            console.log('touchHandler called');
+
+            var touches = event.changedTouches,
+                first = touches[0],
+                type = "";
+            switch(event.type)
+            {
+                case "touchstart": type = "dragstart"; break;
+                case "touchmove":  type = "dragover"; break;
+                case "touchend":   type = "dragend";   break;
+                default:           return;
+            }
+
+            // initMouseEvent(type, canBubble, cancelable, view, clickCount,
+            //                screenX, screenY, clientX, clientY, ctrlKey,
+            //                altKey, shiftKey, metaKey, button, relatedTarget);
+
+            var simulatedEvent = document.createEvent("MouseEvent");
+            simulatedEvent.initMouseEvent(type, true, true, window, 1,
+                                          first.screenX, first.screenY,
+                                          first.clientX, first.clientY, false,
+                                          false, false, false, 0/*left*/, null);
+
+            first.target.dispatchEvent(simulatedEvent);
+
+            let funct = "";
+            switch(event.type)
+            {
+                case "touchstart": funct = "dragStart"; break;
+                case "touchmove":  funct = "dragOver"; break;
+                case "touchend":   funct = "dragEnd";   break;
+                default:           return;
+            }
+
+            let final = 'this.' + funct + '(' + simulatedEvent + ');';
+            console.log(final);
+
+
+            event.preventDefault();
+        },
+        touchStart(e) {
+            e.preventDefault();
+            this.touchHandler(e);
+            /*let todoItem = e.target.parentElement;
+            let touch = e.touches[0];
+            let subtractFromPageY = 0;
+            let todos = document.querySelectorAll('.todo-item');
+            for (var i = 0; i <= todos.length - 1; i++){
+                if (todos[i] == todoItem) {
+                    break;
+                } else {
+                    subtractFromPageY += todos[i].offsetHeight;
+                }
+            }
+            MOVE_OFFEST_Y = todoItem.offsetTop - (touch.pageY + subtractFromPageY);
+            this.resetZ();
+            todoItem.style.zIndex = 10;*/
+        },
+        touchMove(e){
+            this.touchHandler(e);
+            /*let todoItem = e.target.parentElement;
+            let touch = e.touches[0];
+
+            let positionY = touch.pageY + MOVE_OFFEST_Y;
+            const todoWrapper = document.getElementById('todo-wrapper');
+            const rect = todoWrapper.getBoundingClientRect();
+            console.log(rect.top);
+            console.log(touch.pageY);
+
+            if (touch.pageY >= rect.top) {
+                todoItem.style.top = positionY + 'px';
+            } else {
+                e.stopPropagation();
+            }*/
+        },
+        touchEnd(e){
+            this.touchHandler(e);
         }
     }
 }
 </script>
 
 <style scoped>
+
+    #todo-wrapper{
+        position: relative;
+    }
 
     .ghost {
         opacity: .4;
@@ -132,13 +224,18 @@ export default {
 
     .todo-item {
         position: relative;
+        top: 0;
+        left: 0;
         color: #353c43;
         background-color: #fff;
-        /*padding: 10px 10px 0 10px;*/
-        padding: 10px 10px 10px 15px;
-        border-bottom: 1px rgba(0,0,0,.12) solid;
+        padding: 15px 10px 15px 15px;
+        /*border-bottom: 1px rgba(0,0,0,.12) solid;*/
         font-size: 18px;
         cursor: ns-resize;
+        /*border-radius: 5px;*/
+        margin-bottom: 1px;
+        /*box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
+        0 3px 1px -2px rgba(0,0,0,.12);*/
     }
 
     .todo-item p {
@@ -147,8 +244,8 @@ export default {
 
     .del {
         position: absolute;
-        top: 4px;
-        right: 4px;
+        top: 10px;
+        right: 10px;
         background: #e60000;
         border: 1px #cc0000 solid;
         color: #fff;
@@ -163,15 +260,15 @@ export default {
     .del:hover {
         background: #FF0000;
         border: 1px #e60000 solid;
-        top: 3px;
-        right: 3px;
+        top: 9px;
+        right: 9px;
     }
 
     .del:active {
         background: #b30000;
         border: 1px #b30000 solid;
-        top: 3px;
-        right: 3px;
+        top: 9px;
+        right: 9px;
     }
 
 </style>

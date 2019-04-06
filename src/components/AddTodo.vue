@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <div class="add-todo-container">
+        <header class="header">
+            <p>Saturday</p>
+        </header>
         <form @submit="addTodo">
             <input type="text" v-model="title" name="title" placeholder="Add Todo..." onfocus="this.placeholder = ''"
 onblur="this.placeholder = 'Add Todo...'">
@@ -51,10 +54,35 @@ export default {
 </script>
 
 <style scoped>
+
+    .header {
+        background: #fff;
+        color: #616161;
+        text-align: center;
+        padding: 20px 10px 20px 10px;
+        font-size: 40px;
+        font-weight: 300;
+    }
+
+    .header a {
+        color: #fff;
+        padding-right: 5px;
+        text-decoration: none;
+    }
+
+    .add-todo-container {
+        margin-bottom: 1px;
+        /*border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;*/
+        /*box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
+        0 3px 1px -2px rgba(0,0,0,.12);*/
+    }
+
     form {
         display: flex;
         background-color: #fff;
         padding-bottom: 10px;
+        flex-wrap: nowrap;
     }
 
     input[type="text"] {
@@ -81,7 +109,6 @@ export default {
         cursor: pointer;
         font-size: 16px;
         flex: 1;
-        font-size: 16px;
         outline: none;
         border-radius: 0;
         margin: 0 10px;
@@ -99,5 +126,28 @@ export default {
         background-color: whitesmoke;
         border-radius: 20px;
         cursor: pointer;
+    }
+
+    @media (max-width:600px) {
+
+        form {
+            flex-wrap: wrap;
+            padding-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: block;
+        }
+
+        select {
+            display: block;
+            margin-left: 10px;
+        }
+
     }
 </style>
