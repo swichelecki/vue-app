@@ -1,6 +1,6 @@
 <template>
     <div id="todo-wrapper">
-        <div v-for="todo in todos" :key="todo.key" v-on:dragstart="dragStart" v-on:touchstart="touchStart" v-on:dragover="dragOver" v-on:touchmove="touchMove" v-on:dragend="dragEnd" v-on:touchend="touchEnd" draggable="true" class="todo-item" v-bind:class="{'is-complete': todo.completed}">
+        <div v-for="todo in todos" :key="todo.key" :data-key="todo.key" v-on:dragstart="dragStart" v-on:touchstart="touchStart" v-on:dragover="dragOver" v-on:touchmove="touchMove" v-on:dragend="dragEnd" v-on:touchend="touchEnd" draggable="true" class="todo-item" v-bind:class="{'is-complete': todo.completed}">
             <p>
                 <!--<input type="checkbox" v-on:change="$emit('is-complete', todo.completed, todo.key)">-->
                 {{todo.title}} - {{todo.due}}
@@ -11,11 +11,12 @@
 </template>
 
 <script>
+
 let DRAG_EL = '';
 let TODO_WRAPPER = '';
 let OLD_INDEX = 0;
-//let MOVE_OFFSET_X = 0;
-let MOVE_OFFEST_Y = 0;
+let LIST = '';
+
 export default {
     name: "Todos",
     props: ["todos"],
@@ -24,101 +25,93 @@ export default {
             this.todo.completed = !this.todo.completed
         },
         dragStart(e) {
-            TODO_WRAPPER = document.querySelector('#todo-wrapper');
-            const todoNodes = document.querySelectorAll('#todo-wrapper div');
+            if (window.innerWidth >= 600) {
+                TODO_WRAPPER = document.querySelector('#todo-wrapper');
+                const todoNodes = document.querySelectorAll('#todo-wrapper div');
 
-            for (var i = 0; i < todoNodes.length; i++) {
+                for (var i = 0; i < todoNodes.length; i++) {
 
-                todoNodes[i].index = i;
-                OLD_INDEX = e.target.index;
+                    todoNodes[i].index = i;
+                    OLD_INDEX = e.target.index;
+                }
+
+                DRAG_EL = e.target;
+
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('Text', DRAG_EL.textContent);
+
+                setTimeout(function() {
+
+                    DRAG_EL.classList.add('ghost');
+
+                }, 0);
             }
-
-            DRAG_EL = e.target;
-
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('Text', DRAG_EL.textContent);
-
-            setTimeout(function() {
-
-                DRAG_EL.classList.add('ghost');
-
-            }, 0);
         },
         dragOver(e) {
             e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
+            if (window.innerWidth >= 600) {
+                e.dataTransfer.dropEffect = 'move';
 
-            let target = e.target;
-            if (target && target !== DRAG_EL && target.nodeName == 'DIV') {
+                let target = e.target;
+                if (target && target !== DRAG_EL && target.nodeName == 'DIV') {
 
-                TODO_WRAPPER.insertBefore(DRAG_EL, target.nextSibling || target);
+                    TODO_WRAPPER.insertBefore(DRAG_EL, target.nextSibling || target);
 
+                }
             }
-
         },
         dragEnd(e) {
             e.preventDefault();
-            const todoNodes = document.querySelectorAll('#todo-wrapper div');
+            if (window.innerWidth >= 600) {
+                const todoNodes = document.querySelectorAll('#todo-wrapper div');
 
-            let newIndex = 0;
+                let newIndex = 0;
 
-            for (var i = 0; i < todoNodes.length; i++) {
+                for (var i = 0; i < todoNodes.length; i++) {
 
-                todoNodes[i].index = i;
-                newIndex = e.target.index;
+                    todoNodes[i].index = i;
+                    newIndex = e.target.index;
 
+                }
+
+                DRAG_EL.classList.remove('ghost');
+
+                const todos = this.todos;
+
+                const getReorderedList = (OLD_INDEX, newIndex, todos) => {
+
+                    const movedTodo = todos.find((todo, index) => index === OLD_INDEX);
+                    const remainingTodos = todos.filter((todo, index) => index !== OLD_INDEX);
+                    const reorderedTodos = [];
+
+                    remainingTodos.forEach((todo, index) => {
+
+                        if (index === newIndex) {
+
+                            reorderedTodos.push(movedTodo);
+                            reorderedTodos.push(todo);
+
+                        } else {
+
+                            reorderedTodos.push(todo);
+
+                        }
+
+                    });
+
+                    if (newIndex === remainingTodos.length) reorderedTodos.push(movedTodo);
+
+                    return reorderedTodos;
+
+                }
+
+                const reorderedTodos = getReorderedList(OLD_INDEX, newIndex, todos);
+
+                this.$emit('reordered-todos', reorderedTodos);
             }
-
-            DRAG_EL.classList.remove('ghost');
-            /*DRAG_EL.classList.add('hold');
-            setTimeout(function(){
-                DRAG_EL.classList.remove('hold');
-            }, 300);*/
-
-            const todos = this.todos;
-
-            const getReorderedList = (OLD_INDEX, newIndex, todos) => {
-
-                const movedTodo = todos.find((todo, index) => index === OLD_INDEX);
-                const remainingTodos = todos.filter((todo, index) => index !== OLD_INDEX);
-                const reorderedTodos = [];
-
-                remainingTodos.forEach((todo, index) => {
-
-                    if (index === newIndex) {
-
-                        reorderedTodos.push(movedTodo);
-                        reorderedTodos.push(todo);
-
-                    } else {
-
-                        reorderedTodos.push(todo);
-
-                    }
-
-                });
-
-                if (newIndex === remainingTodos.length) reorderedTodos.push(movedTodo);
-
-                return reorderedTodos;
-
-            }
-
-            const reorderedTodos = getReorderedList(OLD_INDEX, newIndex, todos);
-
-            this.$emit('reordered-todos', reorderedTodos);
-
         },
-        /*resetZ() {
-            let todos = document.querySelectorAll('.todo-item');
-            for (var i = todos.length - 1; i >=0; i--){
-                todos[i].style.zIndex = 5;
-            }
-        },*/
         touchHandler(event){
-
-            console.log('touchHandler called');
-
+            event.preventDefault();
             var touches = event.changedTouches,
                 first = touches[0],
                 type = "";
@@ -142,58 +135,114 @@ export default {
 
             first.target.dispatchEvent(simulatedEvent);
 
-            let funct = "";
-            switch(event.type)
-            {
-                case "touchstart": funct = "dragStart"; break;
-                case "touchmove":  funct = "dragOver"; break;
-                case "touchend":   funct = "dragEnd";   break;
-                default:           return;
+            const todoNodes = document.querySelectorAll('#todo-wrapper div');
+
+            for (var i = 0; i < todoNodes.length; i++) {
+
+                todoNodes[i].index = i;
+                OLD_INDEX = simulatedEvent.target.parentElement.index;
+
             }
 
-            let final = 'this.' + funct + '(' + simulatedEvent + ');';
-            console.log(final);
+            LIST = document.getElementById('todo-wrapper');
+            new Slip(LIST);
 
+            LIST.addEventListener('slip:reorder', function(simulatedEvent) {
+                simulatedEvent.target.parentNode.insertBefore(simulatedEvent.target, simulatedEvent.detail.insertBefore);
+            });
 
-            event.preventDefault();
         },
         touchStart(e) {
             e.preventDefault();
-            this.touchHandler(e);
-            /*let todoItem = e.target.parentElement;
-            let touch = e.touches[0];
-            let subtractFromPageY = 0;
-            let todos = document.querySelectorAll('.todo-item');
-            for (var i = 0; i <= todos.length - 1; i++){
-                if (todos[i] == todoItem) {
-                    break;
-                } else {
-                    subtractFromPageY += todos[i].offsetHeight;
-                }
+
+            if (e.target.classList.contains('del')) {
+
+                this.$emit('del-todo', e.target.parentElement.dataset.key);
+
             }
-            MOVE_OFFEST_Y = todoItem.offsetTop - (touch.pageY + subtractFromPageY);
-            this.resetZ();
-            todoItem.style.zIndex = 10;*/
-        },
-        touchMove(e){
-            this.touchHandler(e);
-            /*let todoItem = e.target.parentElement;
-            let touch = e.touches[0];
 
-            let positionY = touch.pageY + MOVE_OFFEST_Y;
-            const todoWrapper = document.getElementById('todo-wrapper');
-            const rect = todoWrapper.getBoundingClientRect();
-            console.log(rect.top);
-            console.log(touch.pageY);
-
-            if (touch.pageY >= rect.top) {
-                todoItem.style.top = positionY + 'px';
-            } else {
-                e.stopPropagation();
-            }*/
-        },
-        touchEnd(e){
             this.touchHandler(e);
+        },
+        touchMove(){
+
+        },
+        touchEnd(event){
+            event.preventDefault();
+
+            const todoNodes = LIST.children;
+            let startingIndex = 0;
+            let newIndex = 0;
+            let movedNodesUp = null;
+            let movedNodesDown = null;
+
+            for (var i = 0; i < todoNodes.length; i++) {
+
+                if (todoNodes[i].getAttribute('style').indexOf('z-index') > -1){
+                    //console.log('has z-index ', todoNodes[i]);
+                    startingIndex = todoNodes[i].index;
+                }
+
+                if (todoNodes[i].getAttribute('style').indexOf('transform: translate(0px, 55px)') > -1){
+                    //console.log('node moves down ', todoNodes[i]);
+                    movedNodesDown = movedNodesDown + 1;
+                }
+
+                if (todoNodes[i].getAttribute('style').indexOf('transform: translate(0px, -55px)') > -1){
+                    //console.log('node moves up ', todoNodes[i]);
+                    movedNodesUp = movedNodesUp + 1;
+                }
+
+                if (startingIndex && movedNodesUp == null) {
+                    //console.log('moving up from anywhere');
+                    newIndex = (startingIndex - movedNodesDown);
+                } else if (startingIndex >= 0 && movedNodesUp != null) {
+                    //console.log('moving down NEW');
+                    newIndex = (startingIndex + movedNodesUp);
+                } else {
+                    //console.log('moving down');
+                    newIndex = (startingIndex + movedNodesUp);
+                }
+
+            }
+
+            //console.log('STARTING INDEX ', startingIndex);
+            //console.log("NEW INDEX", newIndex);
+            //console.log("MOVED NODES DOWN", movedNodesDown);
+            //console.log("MOVED NODES UP", movedNodesUp);
+
+            const todos = this.todos;
+
+            const getReorderedList = (startingIndex, newIndex, todos) => {
+
+                const movedTodo = todos.find((todo, index) => index === startingIndex);
+                const remainingTodos = todos.filter((todo, index) => index !== startingIndex);
+                const reorderedTodos = [];
+
+                remainingTodos.forEach((todo, index) => {
+
+                    if (index === newIndex) {
+
+                        reorderedTodos.push(movedTodo);
+                        reorderedTodos.push(todo);
+
+                    } else {
+
+                        reorderedTodos.push(todo);
+
+                    }
+
+                });
+
+                if (newIndex === remainingTodos.length) reorderedTodos.push(movedTodo);
+
+                return reorderedTodos;
+
+            }
+
+            const reorderedTodos = getReorderedList(startingIndex, newIndex, todos);
+
+            this.$emit('reordered-todos', reorderedTodos);
+
         }
     }
 }
@@ -218,10 +267,6 @@ export default {
         cursor: ns-resize;
     }
 
-    .hold {
-        /*box-shadow: 0 0 20px #61dafb;*/
-    }
-
     .todo-item {
         position: relative;
         top: 0;
@@ -229,13 +274,9 @@ export default {
         color: #353c43;
         background-color: #fff;
         padding: 15px 10px 15px 15px;
-        /*border-bottom: 1px rgba(0,0,0,.12) solid;*/
         font-size: 18px;
         cursor: ns-resize;
-        /*border-radius: 5px;*/
         margin-bottom: 1px;
-        /*box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
-        0 3px 1px -2px rgba(0,0,0,.12);*/
     }
 
     .todo-item p {

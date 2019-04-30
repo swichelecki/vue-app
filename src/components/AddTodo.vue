@@ -72,10 +72,6 @@ export default {
 
     .add-todo-container {
         margin-bottom: 1px;
-        /*border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;*/
-        /*box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
-        0 3px 1px -2px rgba(0,0,0,.12);*/
     }
 
     form {
@@ -96,6 +92,7 @@ export default {
         background-color: whitesmoke;
         border-radius: 20px;
         font-weight: 200;
+        -webkit-appearance: none;
     }
 
     .btn {
@@ -147,6 +144,7 @@ export default {
         select {
             display: block;
             margin-left: 10px;
+            -webkit-appearance: none;
         }
 
     }

@@ -3,6 +3,7 @@ import App from './App.vue'
 import Router from 'vue-router'
 import {routes} from './router'
 import * as firebase from 'firebase'
+import Slip from './slip'
 //import 'firebase/database'
 
 // Initialize Firebase

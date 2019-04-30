@@ -27,13 +27,69 @@ export default {
       deleteTodo(key) {
           //this.todos = this.todos.filter(todo => todo.id !== id);
           const todoItemsDatabaseRef = firebase.database().ref('items');
-          todoItemsDatabaseRef.child(key).remove();
+          let promise1 = '';
+          promise1 = Promise.resolve(todoItemsDatabaseRef.child(key).remove());
+
+          promise1.then(function() {
+
+              if (window.innerWidth <= 600) {
+
+                  const todoWrapper = document.getElementById('todo-wrapper');
+                  const height = window.innerHeight;
+                  const wrapperTop = todoWrapper.getBoundingClientRect().top;
+                  const todoWrapperHeight = (height - wrapperTop);
+
+                  const todoNodes = document.querySelectorAll('#todo-wrapper div');
+                  let todoHeight = 0;
+
+                  todoNodes.forEach((item) => {
+                          todoHeight += item.clientHeight;
+                  });
+
+                  if (todoHeight < todoWrapperHeight) {
+
+                      todoWrapper.removeAttribute("style");
+                      todoWrapper.classList.remove('mobile-scroll');
+
+                  }
+
+              }
+
+          });
       },
       addTodo(newTodo) {
          // this.todos = [...this.todos, newTodo];
           const todoItemsDatabaseRef = firebase.database().ref('items');
           const addTodo = todoItemsDatabaseRef.push();
-          addTodo.set(newTodo);
+          let promise1 = '';
+          promise1 = Promise.resolve(addTodo.set(newTodo));
+
+          promise1.then(function() {
+
+              if (window.innerWidth <= 600) {
+
+                  const todoWrapper = document.getElementById('todo-wrapper');
+                  const height = window.innerHeight;
+                  const wrapperTop = todoWrapper.getBoundingClientRect().top;
+                  const todoWrapperHeight = (height - wrapperTop);
+
+                  const todoNodes = document.querySelectorAll('#todo-wrapper div');
+                  let todoHeight = 0;
+
+                  todoNodes.forEach((item) => {
+                          todoHeight += item.clientHeight;
+                  });
+
+                  if (todoHeight > todoWrapperHeight) {
+
+                      todoWrapper.setAttribute('style', 'height: ' + todoWrapperHeight + 'px;');
+                      todoWrapper.classList.add('mobile-scroll');
+
+                  }
+
+              }
+
+          });
       },
       markComplete(value, sentKey) {
            let complete;
@@ -61,6 +117,7 @@ export default {
       getData(values) {
         this.todos = [];
         const todosData = values;
+        let promise1 = '';
         const todoObjects = _(todosData)
                             .keys()
                             .map(todoKey => {
@@ -72,7 +129,35 @@ export default {
 
         let thisState = this.todos;
         todoObjects.forEach(function(item) {
-            thisState.push(item);
+            promise1 = Promise.resolve(thisState.push(item));
+
+            promise1.then(function() {
+
+                if (window.innerWidth <= 600) {
+
+                    const todoWrapper = document.getElementById('todo-wrapper');
+                    const height = window.innerHeight;
+                    const wrapperTop = todoWrapper.getBoundingClientRect().top;
+                    const todoWrapperHeight = (height - wrapperTop);
+
+                    const todoNodes = document.querySelectorAll('#todo-wrapper div');
+                    let todoHeight = 0;
+
+                    todoNodes.forEach((item) => {
+                            todoHeight += item.clientHeight;
+                    });
+
+                    if (todoHeight > todoWrapperHeight) {
+
+                        todoWrapper.setAttribute('style', 'height: ' + todoWrapperHeight + 'px;');
+                        todoWrapper.classList.add('mobile-scroll');
+
+                    }
+
+                }
+
+            });
+            
         });
 
     },
@@ -93,3 +178,20 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+    .mobile-scroll {
+        overflow-y: scroll;
+    }
+
+    .mobile-scroll::-webkit-scrollbar {
+        width: 1em;
+        background-color: whitesmoke;
+    }
+
+    .mobile-scroll::-webkit-scrollbar-thumb {
+        background-color: #d9d9d9;
+    }
+
+</style>
