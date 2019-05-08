@@ -48,7 +48,7 @@ export default {
 
                   if (todoHeight < todoWrapperHeight) {
 
-                      todoWrapper.removeAttribute("style");
+                      //todoWrapper.removeAttribute("style");
                       todoWrapper.classList.remove('mobile-scroll');
 
                   }
@@ -82,7 +82,7 @@ export default {
 
                   if (todoHeight > todoWrapperHeight) {
 
-                      todoWrapper.setAttribute('style', 'height: ' + todoWrapperHeight + 'px;');
+                      //todoWrapper.setAttribute('style', 'height: ' + todoWrapperHeight + 'px;');
                       todoWrapper.classList.add('mobile-scroll');
 
                   }
@@ -139,6 +139,7 @@ export default {
                     const height = window.innerHeight;
                     const wrapperTop = todoWrapper.getBoundingClientRect().top;
                     const todoWrapperHeight = (height - wrapperTop);
+                    todoWrapper.setAttribute('style', 'height: ' + todoWrapperHeight + 'px;');
 
                     const todoNodes = document.querySelectorAll('#todo-wrapper div');
                     let todoHeight = 0;
@@ -149,7 +150,7 @@ export default {
 
                     if (todoHeight > todoWrapperHeight) {
 
-                        todoWrapper.setAttribute('style', 'height: ' + todoWrapperHeight + 'px;');
+                        //todoWrapper.setAttribute('style', 'height: ' + todoWrapperHeight + 'px;');
                         todoWrapper.classList.add('mobile-scroll');
 
                     }
@@ -157,7 +158,7 @@ export default {
                 }
 
             });
-            
+
         });
 
     },
