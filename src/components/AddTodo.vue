@@ -18,7 +18,8 @@ onblur="this.placeholder = 'Add Todo...'">
 </template>
 
 <script>
-import * as firebase from 'firebase';
+import firebase from 'firebase/app'
+import 'firebase/database'
 let KEY;
 export default {
     name: 'AddTodo',
@@ -34,6 +35,12 @@ export default {
             const form = document.querySelector('form');
             const opt = select.options[select.selectedIndex];
 
+            let due = opt.text;
+
+            if (due == 'Due Date'){
+                due = '';
+            }
+
             const TodoItemsDatabaseRef = firebase.database().ref('items');
             TodoItemsDatabaseRef.on("value", function(snapshot) {
                 let id = snapshot.numChildren();
@@ -43,7 +50,7 @@ export default {
             const newTodo = {
                 key: KEY,
                 title: this.title,
-                due: opt.text,
+                due: due,
                 completed: false
             }
             this.$emit('add-todo', newTodo);

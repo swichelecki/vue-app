@@ -3,7 +3,7 @@
         <div v-for="todo in todos" :key="todo.key" :data-key="todo.key" v-on:dragstart="dragStart" v-on:touchstart="touchStart" v-on:dragover="dragOver" v-on:touchmove="touchMove" v-on:dragend="dragEnd" v-on:touchend="touchEnd" draggable="true" class="todo-item" v-bind:class="{'is-complete': todo.completed}">
             <p>
                 <!--<input type="checkbox" v-on:change="$emit('is-complete', todo.completed, todo.key)">-->
-                {{todo.title}} - {{todo.due}}
+                {{todo.title}} <span v-if="todo.due">-</span> {{todo.due}}
             </p>
             <button @click="$emit('del-todo', todo.key)" class="del">delete <br>x</button>
         </div>
@@ -280,7 +280,7 @@ export default {
     }
 
     .todo-item p {
-        margin-right: 50px;
+        margin-right: 55px;
     }
 
     .del {
@@ -298,18 +298,22 @@ export default {
         outline: none;
     }
 
-    .del:hover {
-        background: #FF0000;
-        border: 1px #e60000 solid;
-        top: 9px;
-        right: 9px;
-    }
+    @media (min-width:600px){
 
-    .del:active {
-        background: #b30000;
-        border: 1px #b30000 solid;
-        top: 9px;
-        right: 9px;
+        .del:hover {
+            background: #FF0000;
+            border: 1px #e60000 solid;
+            top: 9px;
+            right: 9px;
+        }
+
+        .del:active {
+            background: #b30000;
+            border: 1px #b30000 solid;
+            top: 9px;
+            right: 9px;
+        }
+
     }
 
 </style>
