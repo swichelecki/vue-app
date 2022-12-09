@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "ajv": "^5.5.2",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "firebase": "^5.8.2",
     "lodash": "^4.17.19",
     "uuid": "^3.3.2",
